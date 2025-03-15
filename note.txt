@@ -1,0 +1,5 @@
+npm install --global 
+eas-cli
+npx create-expo-app sanityhub 
+cd sanityhub 
+eas init --id 5b01da1a-909c-4d7a-b3e7-4e1ce977d842

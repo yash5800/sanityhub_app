@@ -1,11 +1,11 @@
 {
   "expo": {
-    "androidStatusBar":{
-      "backgroundColor":"dark",
-      "barStyle":"light-content"
+    "androidStatusBar": {
+      "backgroundColor": "dark",
+      "barStyle": "light-content"
     },
-    "name": "sanityhub_app",
-    "slug": "sanityhub_app",
+    "name": "SanityHub",
+    "slug": "sanityhub",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.deva5800.sanityhub_app"
     },
     "web": {
       "bundler": "metro",
@@ -34,12 +35,21 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "dark"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5b01da1a-909c-4d7a-b3e7-4e1ce977d842"
+      }
+    },
+    "owner": "deva5800"
   }
 }
