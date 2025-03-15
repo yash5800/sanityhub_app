@@ -1,5 +1,9 @@
 {
   "expo": {
+    "androidStatusBar":{
+      "backgroundColor":"dark",
+      "barStyle":"light-content"
+    },
     "name": "sanityhub_app",
     "slug": "sanityhub_app",
     "version": "1.0.0",
