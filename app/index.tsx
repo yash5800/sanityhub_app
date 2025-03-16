@@ -32,7 +32,7 @@ export default function Index() {
   }
   return (
     <SafeAreaView
-      className="flex flex-col justify-evenly items-center h-full w-full px-5 bg-slate-800"
+      className="flex flex-col justify-evenly items-center h-full w-full px-5 bg-slate-950"
     >
       <Text className="text-3xl font-bold text-blue-400"><Text className="text-gray-500">Welcome to</Text> SanityHub!</Text>
       <View className="flex items-center justify-center object-contain">
