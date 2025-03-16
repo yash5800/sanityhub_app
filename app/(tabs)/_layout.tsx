@@ -9,9 +9,16 @@ interface TabBarProps{
   icon:any
 }
 
+import { DevSettings } from 'react-native';
+
+// Call this function to reload the app
+const reloadApp = () => {
+  DevSettings.reload();
+};
+
 const TabBar= ({focused,title,icon}:TabBarProps)=>{
    return(
-    <View className='flex flex-row justify-center items-center w-full min-w-[50px] rounded-full h-14 mt-4' >
+    <View className='flex flex-row justify-center items-center w-full min-w-[50px] rounded-full h-14 mt-4' onTouchStart={()=>reloadApp} >
        {
         focused?
         <>

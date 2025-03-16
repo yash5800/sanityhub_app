@@ -17,7 +17,7 @@ type Post = {
 const Files = () => {
   const {key,setKey} = useContext(context);
   const router = useRouter();
-  const [Dload,setDload] = useState<boolean>(false);
+  const [Dload,setDload] = useState<string|null>(null);
   const [data,setData] = useState<Post[]>([]);
 
   useEffect(()=>{
@@ -44,6 +44,8 @@ const Files = () => {
   },[])
 
   const downloadFile = async(filename:string,fileUrl:string)=>{
+    setDload(filename);
+
     const downloadsDir = FileSystem.documentDirectory + "downloads/";
 
     const dirInfo = await FileSystem.getInfoAsync(downloadsDir);
@@ -53,23 +55,22 @@ const Files = () => {
         console.log("Created downloads folder");
     }
 
-    setDload(true);
-
     try{
       const fileUri = FileSystem.documentDirectory + "downloads/" + filename;
 
       const fileInfo = await FileSystem.getInfoAsync(fileUri);
       if(fileInfo.exists){
         Alert.alert(`File Exists at :${fileUri}`);
+        setDload(null);
         return;
       }
 
       const {uri} = await FileSystem.downloadAsync(fileUrl,fileUri)
-      setDload(false)
       Alert.alert("Download Complete",`File Saved to :${uri}`);
+      setDload(null);
     }
     catch(err:any){
-      setDload(false)
+      setDload(null);
       Alert.alert("failed!,check network status..")
     }
   }
@@ -80,7 +81,7 @@ const Files = () => {
     router.push('/')
   }
   return (
-    <SafeAreaView className='flex justify-start items-center px-5 w-full bg-slate-800 h-full pb-20'>
+    <SafeAreaView className='flex justify-start items-center px-5 w-full bg-[#001729] h-full pb-20'>
       <View className='flex justify-center items-end w-full mt-3'>
         <TouchableOpacity className='flex flex-row justify-center items-center px-5 py-3 rounded-full border-2 border-orange-400 gap-1' onPress={handleClear}>
           <Text className='text-lg font-semibold text-white'>{key}</Text>
@@ -95,27 +96,34 @@ const Files = () => {
        keyExtractor={item => item._id}
        renderItem={({item})=>(<>
          {item.filename!==null&&item.fileUrl!==null?
-         <View className='p-3 w-[280px] h-[100px] bg-gray-900 rounded-lg mt-5 flex flex-col justify-between items-center relative'>
-            <Image source={item.filename.split('.')[1].toLowerCase() == "csv" && icons.csv ||
+         <View className='p-3 w-[280px] h-[100px] bg-black rounded-lg mt-5 flex flex-col justify-between items-center relative'>
+            <Image source={
+              item.filename.split('.')[1].toLowerCase() == "csv" && icons.csv ||
               item.filename.split('.')[1].toLowerCase() == "pdf" && icons.pdf ||
               item.filename.split('.')[1].toLowerCase() == "txt" && icons.txt ||
               item.filename.split('.')[1].toLowerCase() == "docx" && icons.doc ||
-              item.filename.split('.')[1].toLowerCase() == "excel" && icons.xls ||
+              item.filename.split('.')[1].toLowerCase() == "excel" && icons.xls 
+            } className='absolute left-0 -top-3 size-8' />
+
+            <Image source={
               item.filename.split('.')[1].toLowerCase() == "py" && icons.coding ||
               item.filename.split('.')[1].toLowerCase() == "html" && icons.coding ||
               item.filename.split('.')[1].toLowerCase() == "c" && icons.coding ||
               item.filename.split('.')[1].toLowerCase() == "js" && icons.coding 
+            } className='absolute left-0 -top-3 size-8' style={{tintColor:'white'}}/>
 
-          
-            } className='absolute left-0 -top-3 size-8' />
-            <View className=' flex flex-row justify-between items-center w-full px-3 mt-4'>
+            <View className=' flex flex-row justify-between items-center w-full px-3'>
               <Text className='max-w-[160px] text-xl text-blue-400'
                   numberOfLines={1} 
                   ellipsizeMode="tail"
               >{item.filename}</Text>
-              <TouchableOpacity onPress={() => downloadFile(item.filename,item.fileUrl)}>
-                  {Dload?<Text className='text-xl font-bold text-blue-600'>...</Text>:<Image source={icons.disk} style={{tintColor:'green'}} className='size-10'/>}
-              </TouchableOpacity>
+              {Dload !== item.filename?
+              <TouchableOpacity className='flex flex-col justify-center items-center' onPress={() => downloadFile(item.filename,item.fileUrl)}>
+                  <Image source={icons.disk} style={{tintColor:'green'}} className='size-10'/>
+                  <Text className='text-sm font-semibold text-white'>Download</Text>
+              </TouchableOpacity>:
+              <Text className='text-xl font-bold text-blue-600'>...</Text>
+              }
             </View>
             <Text className='text-base text-yellow-500 opacity-80 font-semibold'>{new Date(item._createdAt).toLocaleString()}</Text>
          </View>
