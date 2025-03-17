@@ -1,4 +1,4 @@
-import { View, Text, Alert, FlatList, TouchableOpacity, Image } from 'react-native'
+import { View, Text, Alert, FlatList, TouchableOpacity, Image, ScrollView, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import * as FileSystem from "expo-file-system";
 import { router, useRouter } from 'expo-router';
@@ -7,12 +7,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import icons from '@/lib/icons';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { Platform, Linking } from 'react-native';
+import { DevSettings } from 'react-native';
 
 const downloadsDir = FileSystem.documentDirectory + 'downloads/';
 
 const Downloaded = () => {
   const [userFiles, setUserFiles] = useState<string[]>([]);
   const router = useRouter();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 900);
+    DevSettings.reload();
+  };
 
   const listFiles =async ()=>{
     const downloadsDir = FileSystem.documentDirectory + "downloads/";
@@ -139,8 +147,15 @@ const handleOpen = async (item: string) => {
 
   return (
     <SafeAreaView className='flex justify-start items-center px-5
-     w-full bg-[#001729] h-full pb-20'>
-      <Text className="text-3xl mt-10 font-bold text-green-400 text-start w-full mb-5">Downloaded Files:</Text>
+     w-full bg-[#001729] h-full'>
+    <ScrollView className='flex-1'
+       showsVerticalScrollIndicator={false}
+       contentContainerStyle={{paddingBottom:80}}
+       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+      <View className='flex mt-10 w-full justify-start items-center flex-row'>
+        <Text className="text-3xl font-bold text-green-400 text-start mb-5">Downloaded Files:</Text>
+      </View>
       {userFiles.length === 0 ? (
         <Text>No files found.</Text>
       ) : (
@@ -148,6 +163,7 @@ const handleOpen = async (item: string) => {
         <FlatList
           data={userFiles}
           keyExtractor={(item) => item}
+          scrollEnabled={false}
           renderItem={({ item }) => (
             <View className=' flex flex-row justify-between items-center bg-black rounded-xl w-full px-3 py-5 mt-8 shadow-black relative'>
                 <TouchableOpacity onPress={()=> handleOpen(item)}>
@@ -164,6 +180,7 @@ const handleOpen = async (item: string) => {
         />
         </>
       )}
+      </ScrollView>
     </SafeAreaView>
   );
 };

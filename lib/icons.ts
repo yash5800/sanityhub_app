@@ -10,6 +10,12 @@ import doc from '../assets/icons/doc.png'
 import pdf from '../assets/icons/pdf.png'
 import txt from '../assets/icons/txt.png'
 import xls from '../assets/icons/xls.png'
+import refresh from '../assets/images/refresh.png'
+import oops from '../assets/images/oops.png'
+import online from '../assets/icons/wifi.png'
+import offline from '../assets/icons/offline.png'
+import globe from '../assets/icons/globe.png'
+import globe_cancel from '../assets/icons/globe_cancel.png'
 
 export default {
   file,
@@ -23,6 +29,12 @@ export default {
   pdf,
   doc,
   xls,
-  txt
+  txt,
+  refresh,
+  offline,
+  online,
+  globe,
+  globe_cancel,
+  oops
 }
 

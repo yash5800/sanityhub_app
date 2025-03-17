@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 export const fetchPosts = async (key: string) => {
-  const projectId = 'qvz6ecd3';
-  const dataset = 'production';
-  const token = 'skASxqccKDelTIIHlyy6dI6piE9sAPEIClGNgJbpIviw8SVKn8I9ETCyZkXKG3uHETUG3s0yzVvyiFi8eC4R3Ye3w20sQK00yy0ir0aq0GC5SHxP6Kd73qL6gl8z5m8DBrb5bBAvQmHkzOebc7Hb3yO65FCZQBTwGDKQ9UxkxOQuEY2ds120';
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+  const token = process.env.NEXT_PUBLIC_SANITY_TOKEN;
   console.log(projectId,dataset,token)
 
   const query = `*[_type == "post" && (!defined($search) || key match $search)] | order(_createdAt desc) {

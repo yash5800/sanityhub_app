@@ -1,7 +1,8 @@
 import { View, Text, Image } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Tabs } from 'expo-router'
 import icons from '@/lib/icons'
+import { context } from '../_layout'
 
 interface TabBarProps{
   focused:boolean,
@@ -9,49 +10,34 @@ interface TabBarProps{
   icon:any
 }
 
-import { DevSettings } from 'react-native';
 
-// Call this function to reload the app
-const reloadApp = () => {
-  DevSettings.reload();
-};
 
 const TabBar= ({focused,title,icon}:TabBarProps)=>{
    return(
-    <View className='flex flex-row justify-center items-center w-full min-w-[50px] rounded-full h-14 mt-4' onTouchStart={()=>reloadApp} >
-       {
-        focused?
-        <>
-          <Image source={icon} className='size-7 mr-2' tintColor='#2596be' />
-          <Text className={`${focused?"text-[#2596be]":"text-gray-500"} text-base font-semibold`}>{title}</Text>
-        </>
-        :
-        <Image source={icon} className='size-7' tintColor='#A8B5DB' />
-       }
+    <View className={`flex flex-col justify-center items-center bg-transparent rounded-full h-14 mt-7 ${focused && 'border-[0.9px] border-[#2596be]'}`} >
+         <View className='flex-1 flex-col justify-center items-center min-w-[50px]'>
+          <Image source={icon} className='size-6' resizeMode='contain' tintColor={`${focused?'#2596be':'#808080'}`} />
+          <Text className={`${focused?"text-[#2596be]":"text-gray-500"} text-sm font-semibold`}>{title}</Text>
+          </View>
     </View>
    )
 }
 
 const Layout = () => {
+  const {offline} = useContext(context);
+
   return (
     <Tabs
      screenOptions={{
       headerShown: false,
       tabBarShowLabel: false,
-      tabBarItemStyle:{
-        width: '100%',
-        height:'100%',
-        justifyContent:'center',
-        alignItems:'center',
-      },
       tabBarStyle:{
-        borderRadius:50,
         backgroundColor:'black',
         position:'absolute',
-        marginHorizontal:20,
-        marginBottom:16,
         height:60,
-        borderColor:'black'
+        borderColor:'black',
+        borderTopLeftRadius:50,
+        borderTopRightRadius:50
       }
      }}
     >
@@ -70,6 +56,15 @@ const Layout = () => {
         title:'Saved',
         tabBarIcon:({focused})=>{
           return <TabBar focused={focused} title={"Saved"} icon={icons.save}/>
+        }
+      }}
+      />
+      <Tabs.Screen
+      name='web'
+      options={{
+        title:'Web',
+        tabBarIcon:({focused})=>{
+          return <TabBar focused={focused} title={"Web"} icon={offline ? icons.globe_cancel :icons.globe}/>
         }
       }}
       />
