@@ -12,7 +12,7 @@ I created this app to make file sharing seamless and secure. With this app, you 
 
 ## 🔑 App Version: v.1.0.1 (Latest)
 
-⬇️ **[Download APK Here](----)** 
+⬇️ **[Download APK Here](https://expo.dev/artifacts/eas/8dYsxkUg8vG8JqA2jVMDvt.apk)** 
 
 ## 🔑 App Version: v.1.0.0
 
