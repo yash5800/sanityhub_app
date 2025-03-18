@@ -1,10 +1,14 @@
 import axios from 'axios';
 
 export const fetchPosts = async (key: string) => {
-  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
-  const token = process.env.NEXT_PUBLIC_SANITY_TOKEN;
-  console.log(projectId,dataset,token)
+
+
+  const projectId = process.env.EXPO_PUBLIC_SANITY_PROJECT_ID;
+  const dataset = process.env.EXPO_PUBLIC_SANITY_DATASET;
+  const token = process.env.EXPO_PUBLIC_SANITY_TOKEN;
+
+  console.log(projectId,dataset,token);
+  
 
   const query = `*[_type == "post" && (!defined($search) || key match $search)] | order(_createdAt desc) {
     _id, key, filename, "fileUrl": file.asset->url, _createdAt

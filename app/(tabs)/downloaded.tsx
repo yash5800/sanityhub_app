@@ -8,6 +8,7 @@ import icons from '@/lib/icons';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { Platform, Linking } from 'react-native';
 import { DevSettings } from 'react-native';
+import weeks from '@/lib/weeks';
 
 const downloadsDir = FileSystem.documentDirectory + 'downloads/';
 
@@ -115,8 +116,6 @@ const handleOpen = async (item: string) => {
 };
 
 
-  
-  
   const handleShare = async (item: string) => {
     const fileUri = FileSystem.documentDirectory + "downloads/" + item;
   
@@ -145,19 +144,20 @@ const handleOpen = async (item: string) => {
       fetchFiles();
     }, []);
 
+  const day = new Date().getDay();
+
   return (
-    <SafeAreaView className='flex justify-start items-center px-5
+    <SafeAreaView className='flex justify-start items-center
      w-full bg-[#001729] h-full'>
-    <ScrollView className='flex-1'
+     <Image source={day>1?(day>3?weeks.save_bg:weeks.save_bg_2):weeks.save_bg_3} className='w-full h-full absolute z-0 opacity-55' resizeMode='cover' />
+
+    <ScrollView 
        showsVerticalScrollIndicator={false}
-       contentContainerStyle={{paddingBottom:80}}
+       contentContainerStyle={{paddingBottom:100}}
        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-      <View className='flex mt-10 w-full justify-start items-center flex-row'>
-        <Text className="text-3xl font-bold text-green-400 text-start mb-5">Downloaded Files:</Text>
-      </View>
       {userFiles.length === 0 ? (
-        <Text>No files found.</Text>
+        <Text className='text-sm text-gray-300 text-center mt-5 font-normal flex-1'>No files found.</Text>
       ) : (
         <>
         <FlatList
@@ -165,16 +165,24 @@ const handleOpen = async (item: string) => {
           keyExtractor={(item) => item}
           scrollEnabled={false}
           renderItem={({ item }) => (
-            <View className=' flex flex-row justify-between items-center bg-black rounded-xl w-full px-3 py-5 mt-8 shadow-black relative'>
-                <TouchableOpacity onPress={()=> handleOpen(item)}>
-                  <Text className='max-w-[240px] text-xl font-light text-white'
-                    numberOfLines={1} 
-                    ellipsizeMode="tail"
-                   >{item}</Text>
+            <View className=' flex flex-col justify-between items-center bg-black rounded-xl w-full px-5 py-7 mt-8 shadow-black relative gap-5 border-[0.2px] border-white'>
+              <View className='flex-1 justify-start items-center flex-col gap-2'>
+                   <Text className='font-thin text-sm text-gray-300'>File Name:</Text>
+                   <Text className='max-w-[240px] text-xl font-light text-white'
+                      numberOfLines={1} 
+                      ellipsizeMode="tail"
+                     >{item}</Text>
+              </View>
+              <View className='flex-1 justify-center items-center flex-row gap-5'>
+                <TouchableOpacity className='rounded-2xl flex flex-row justify-center items-center px-3 py-3 bg-orange-400 gap-2' onPress={()=> handleOpen(item)}>
+                  <Image source={icons.view} className='size-5' resizeMode='contain' />
+                  <Text className='text-white font-bold'>View</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleShare(item)}>
-                  <Image source={icons.share} className='size-10' />
+                <TouchableOpacity className='rounded-2xl flex flex-row justify-center items-center px-3 py-3 bg-blue-400 gap-2' onPress={() => handleShare(item)}>
+                <Image source={icons.send} className='size-5' resizeMode='contain' />
+                <Text className='text-white font-bold'>share</Text>
                 </TouchableOpacity>
+              </View>
             </View>
           )}
         />

@@ -8,6 +8,7 @@ import icons from '@/lib/icons';
 import { fetchPosts } from '@/lib/filefetch';
 import * as FileSystem from "expo-file-system";
 import { DevSettings } from 'react-native';
+import weeks from '@/lib/weeks';
 
 type Post = {
   _id:string,
@@ -25,9 +26,6 @@ const Files = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {offline} = useContext(context);
   
-
-
-
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => setRefreshing(false), 2000);
@@ -94,10 +92,14 @@ const Files = () => {
     await _clear();
     router.push('/')
   }
+
+  const day = new Date().getDay();
+
   return (
-    <SafeAreaView className='flex justify-start items-center px-5 w-full bg-[#001729] h-full relative'
+    <SafeAreaView className='flex justify-start items-center w-full bg-[#001729] h-full relative'
     >
-     <ScrollView className='flex-1'
+     <Image source={day>1?(day>3?weeks.file_bg_1:weeks.file_bg_2):weeks.file_bg_3} className='w-full h-full absolute z-0 opacity-55' resizeMode='cover' />
+     <ScrollView className='px-5'
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{paddingBottom:10}}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -122,21 +124,21 @@ const Files = () => {
        keyboardShouldPersistTaps="handled"
        renderItem={({item})=>(<>
          {item.filename!==null&&item.fileUrl!==null?
-         <View className='p-3 w-[280px] h-[120px] bg-black rounded-lg mt-5 flex flex-row justify-between items-center relative'>
+         <View className='p-3 w-[280px] h-[120px] bg-black rounded-lg mt-5 flex flex-row justify-between items-center relative border-[0.2px] border-white'>
             <Image source={
               item.filename.split('.')[1].toLowerCase() == "csv" && icons.csv ||
               item.filename.split('.')[1].toLowerCase() == "pdf" && icons.pdf ||
               item.filename.split('.')[1].toLowerCase() == "txt" && icons.txt ||
               item.filename.split('.')[1].toLowerCase() == "docx" && icons.doc ||
               item.filename.split('.')[1].toLowerCase() == "excel" && icons.xls 
-            } className='absolute left-0 -top-3 size-8' />
+            } className='absolute -left-1 -top-3 size-8' />
 
             <Image source={
               item.filename.split('.')[1].toLowerCase() == "py" && icons.coding ||
               item.filename.split('.')[1].toLowerCase() == "html" && icons.coding ||
               item.filename.split('.')[1].toLowerCase() == "c" && icons.coding ||
               item.filename.split('.')[1].toLowerCase() == "js" && icons.coding 
-            } className='absolute left-0 -top-3 size-8' style={{tintColor:'white'}}/>
+            } className='absolute -left-1 -top-3 size-8' style={{tintColor:'white'}}/>
 
             <View className=' flex flex-col justify-between items-center gap-1 px-5'>
               <View className='flex-1 flex-col justify-start items-start w-full gap-1'>
