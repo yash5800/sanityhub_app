@@ -10,6 +10,10 @@ I created this app to make file sharing seamless and secure. With this app, you 
 
 🌐 **Upload Files Here:** [SanityHub](https://sanityhub.vercel.app)  
 
+## 🔑 App Version: v.1.0.2 (Latest)
+
+⬇️ **[Download APK Here](https://expo.dev/artifacts/eas/7WRneCC8SRVzj2NF2iS3xB.apk)** 
+
 ## 🔑 App Version: v.1.0.1 (Latest)
 
 ⬇️ **[Download APK Here](https://expo.dev/artifacts/eas/8dYsxkUg8vG8JqA2jVMDvt.apk)** 
