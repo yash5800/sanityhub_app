@@ -1,5 +1,5 @@
 import { View, Text, Alert, FlatList, TouchableOpacity, Image, ScrollView, RefreshControl } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import * as FileSystem from "expo-file-system";
 import { router, useRouter } from 'expo-router';
 import * as Sharing from "expo-sharing";
@@ -9,19 +9,15 @@ import * as IntentLauncher from 'expo-intent-launcher';
 import { Platform, Linking } from 'react-native';
 import { DevSettings } from 'react-native';
 import weeks from '@/lib/weeks';
+import { context } from '../_layout';
 
 const downloadsDir = FileSystem.documentDirectory + 'downloads/';
 
 const Downloaded = () => {
+  const {check_status,background} = useContext(context);
   const [userFiles, setUserFiles] = useState<string[]>([]);
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 900);
-    DevSettings.reload();
-  };
 
   const listFiles =async ()=>{
     const downloadsDir = FileSystem.documentDirectory + "downloads/";
@@ -132,15 +128,24 @@ const handleOpen = async (item: string) => {
       console.error("Error opening file:", error);
     }
   };
+
+  const fetchFiles = async () => {
+    const res = await listFiles();
+    if (res) {
+        setUserFiles(res);
+    }
+   };
     
+   const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+
+    check_status();
+    fetchFiles();
+
+    setTimeout(() => setRefreshing(false), 2000);
+  },[setRefreshing,fetchFiles,check_status]);
 
   useEffect(() => {
-      const fetchFiles = async () => {
-          const res = await listFiles();
-          if (res) {
-              setUserFiles(res);
-          }
-      };
       fetchFiles();
     }, []);
 
@@ -149,7 +154,7 @@ const handleOpen = async (item: string) => {
   return (
     <SafeAreaView className='flex justify-start items-center
      w-full bg-[#001729] h-full'>
-     <Image source={day>1?(day>3?weeks.save_bg:weeks.save_bg_2):weeks.save_bg_3} className='w-full h-full absolute z-0 opacity-55' resizeMode='cover' />
+     {background && <Image source={day>1?(day>3?weeks.save_bg:weeks.save_bg_2):weeks.save_bg_3} className='w-full h-full absolute z-0 opacity-55' resizeMode='cover' />}
 
     <ScrollView 
        showsVerticalScrollIndicator={false}

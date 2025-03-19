@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Alert, FlatList, Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { context } from '../_layout';
@@ -18,7 +18,7 @@ type Post = {
 }
 
 const Files = () => {
-  const {key,setKey} = useContext(context);
+  const {key,setKey,check_status,background} = useContext(context);
   const router = useRouter();
   const [load,setLoad] = useState<boolean>(true);
   const [Dload,setDload] = useState<string|null>(null);
@@ -26,32 +26,37 @@ const Files = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {offline} = useContext(context);
   
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 2000);
-    DevSettings.reload();
-  };
 
-  useEffect(()=>{
-    const fetch_data = async ()=>{
-      try {
-        if (!offline) {
-          const res = await fetchPosts(key);
-          setData(res);
-          await _storeData(key,res);
-          setLoad(false)
-        }
-        else{
-          const re: string = await _retrieveData(key) ?? '[]';
-          setData(JSON.parse(re))
-          setLoad(false)
-        }
-      } catch (error:any) {
+  const fetch_data = async ()=>{
+    try {
+      if (!offline) {
+        const res = await fetchPosts(key);
+        setData(res);
+        await _storeData(key,res);
+        setLoad(false)
+      }
+      else{
         const re: string = await _retrieveData(key) ?? '[]';
         setData(JSON.parse(re))
         setLoad(false)
       }
+    } catch (error:any) {
+      const re: string = await _retrieveData(key) ?? '[]';
+      setData(JSON.parse(re))
+      setLoad(false)
     }
+  }
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+
+    await check_status();
+    fetch_data();
+
+    setTimeout(() => setRefreshing(false), 2000);
+  },[setRefreshing,fetch_data,check_status]);
+
+  useEffect(()=>{
     fetch_data();
   },[])
 
@@ -98,7 +103,7 @@ const Files = () => {
   return (
     <SafeAreaView className='flex justify-start items-center w-full bg-[#001729] h-full relative'
     >
-     <Image source={day>1?(day>3?weeks.file_bg_1:weeks.file_bg_2):weeks.file_bg_3} className='w-full h-full absolute z-0 opacity-55' resizeMode='cover' />
+     {background && <Image source={day>1?(day>3?weeks.file_bg_1:weeks.file_bg_2):weeks.file_bg_3} className='w-full h-full absolute z-0 opacity-55' resizeMode='cover' />}
      <ScrollView className='px-5'
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{paddingBottom:10}}

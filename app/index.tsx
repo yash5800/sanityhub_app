@@ -2,15 +2,19 @@ import { Link, useRouter } from "expo-router";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import './globals.css'
 import { context } from "./_layout";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import icons from "@/lib/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { _retrieve, _store } from "@/lib/store";
 
 export default function Index() {
-  const {key,setKey} = useContext(context);
+  const {key,setKey,setBackground,background} = useContext(context);
   const router = useRouter();
   const [er,seter] = useState<boolean>(false);
+
+  const wall = useCallback(()=>{
+     background ? setBackground(false) : setBackground(true)
+  },[background,setBackground])
   
   useEffect(()=>{
     _retrieve().then((val)=>{
@@ -37,6 +41,12 @@ export default function Index() {
       <Text className="text-3xl font-bold text-blue-400"><Text className="text-gray-500">Welcome to</Text> SanityHub!</Text>
       <View className="flex items-center justify-center object-contain">
          <Image source={icons.server} className="w-[280px] h-[250px] rounded-2xl" />
+      </View>
+
+      <View className="w-full justify-center items-end">
+        <TouchableOpacity className="flex justify-center items-end bg-orange-500  rounded-2xl px-2 py-2" onPress={wall}>
+          <Text className="text-white font-bold justify-center items-center ">{background?'off wallpaper':'set wallpaper'}</Text>
+        </TouchableOpacity>
       </View>
 
       <View className="flex flex-col items-center justify-center mt-6 w-full gap-5">
