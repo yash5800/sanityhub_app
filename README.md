@@ -14,7 +14,7 @@ I created this app to make file sharing seamless and secure. With this app, you 
 
 ⬇️ **[Download APK Here](https://expo.dev/artifacts/eas/7WRneCC8SRVzj2NF2iS3xB.apk)** 
 
-## 🔑 App Version: v.1.0.1 (Latest)
+## 🔑 App Version: v.1.0.1 
 
 ⬇️ **[Download APK Here](https://expo.dev/artifacts/eas/8dYsxkUg8vG8JqA2jVMDvt.apk)** 
 
